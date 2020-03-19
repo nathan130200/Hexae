@@ -5,33 +5,33 @@ using Hexae.Entities;
 
 namespace Hexae
 {
-  static class Program
-  {
-    static readonly CancellationTokenSource Cts
-      = new CancellationTokenSource();
-
-    static async Task Main(string[] args)
+    static class Program
     {
-      var settings = await HexaeSettings.InitializeAsync();
+        static readonly CancellationTokenSource Cts
+          = new CancellationTokenSource();
 
-      if (!settings.Discord.IsValid)
-        return;
+        static async Task Main(string[] args)
+        {
+            var settings = await HexaeSettings.InitializeAsync();
 
-      Console.CancelKeyPress += (sender, e) =>
-      {
-        if (!Cts.IsCancellationRequested)
-          Cts.Cancel();
+            if (!settings.Discord.IsValid)
+                return;
 
-        e.Cancel = true;
-      };
+            Console.CancelKeyPress += (sender, e) =>
+            {
+                if (!Cts.IsCancellationRequested)
+                    Cts.Cancel();
 
-      var bot = new HexaeBot(settings);
-      await bot.InitializeAsync();
+                e.Cancel = true;
+            };
 
-      while (!Cts.IsCancellationRequested)
-        await Task.Delay(1);
+            var bot = new HexaeBot(settings);
+            await bot.InitializeAsync();
 
-      await bot.ShutdownAsync();
+            while (!Cts.IsCancellationRequested)
+                await Task.Delay(1);
+
+            await bot.ShutdownAsync();
+        }
     }
-  }
 }
